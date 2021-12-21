@@ -83,6 +83,14 @@ static uint32_t session_mobile = 1000;
 /**********************
  *      MACROS
  **********************/
+#define LV_DEMO_WIDGETS_SLIDESHOW 1
+#if LV_DEMO_WIDGETS_SLIDESHOW
+    static void auto_step_cb(lv_timer_t *timer);
+#endif
+
+static lv_obj_t *t1;
+static lv_obj_t *t2;
+static lv_obj_t *t3;
 
 /**********************
  *   GLOBAL FUNCTIONS
@@ -177,15 +185,70 @@ void lv_demo_widgets(void)
         lv_obj_align_to(label, logo, LV_ALIGN_OUT_RIGHT_BOTTOM, 10, 0);
     }
 
-    lv_obj_t * t1 = lv_tabview_add_tab(tv, "Profile");
-    lv_obj_t * t2 = lv_tabview_add_tab(tv, "Analytics");
-    lv_obj_t * t3 = lv_tabview_add_tab(tv, "Shop");
+    t1 = lv_tabview_add_tab(tv, "Profile");
+    t2 = lv_tabview_add_tab(tv, "Analytics");
+    t3 = lv_tabview_add_tab(tv, "Shop");
     profile_create(t1);
     analytics_create(t2);
     shop_create(t3);
 
     color_changer_create(tv);
+
+#if LV_DEMO_WIDGETS_SLIDESHOW
+    lv_timer_create(auto_step_cb, 1000, NULL);
+#endif
+
 }
+
+#if LV_DEMO_MUSIC_AUTO_PLAY
+static void auto_step_cb(lv_timer_t *t)
+{
+    LV_UNUSED(t);
+    static uint32_t state = 0;
+
+    switch (state)
+    {
+    case 0:
+        lv_tabview_set_act(tv, 0, LV_ANIM_ON);
+    case 1:
+        break;
+    case 2:
+        lv_obj_scroll_to(t1, 0, 0, LV_ANIM_ON);
+        lv_tabview_set_act(tv, 0, LV_ANIM_ON);
+    case 3:
+    case 4:
+    case 5:
+        lv_obj_scroll_by(t1, 0, -LV_VER_RES, LV_ANIM_ON);
+        break;
+    case 6:
+        lv_obj_scroll_to(t1, 0, 0, LV_ANIM_OFF);
+        lv_tabview_set_act(tv, 1, LV_ANIM_ON);
+        lv_obj_scroll_to(t2, 0, 0, LV_ANIM_ON);
+        break;
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+        lv_obj_scroll_by(t2, 0, -LV_VER_RES, LV_ANIM_ON);
+        break;
+    case 12:
+        lv_obj_scroll_to(t2, 0, 0, LV_ANIM_OFF);
+        lv_tabview_set_act(tv, 2, LV_ANIM_ON);
+        lv_obj_scroll_to(t3, 0, 0, LV_ANIM_ON);
+    case 13:
+    case 14:
+        lv_obj_scroll_by(t3, 0, -LV_VER_RES, LV_ANIM_ON);
+        break;
+    case 15:
+        lv_obj_scroll_to(t3, 0, 0, LV_ANIM_OFF);
+        state = 0;
+        break;
+    }
+    state++;
+}
+
+#endif /*LV_DEMO_MUSIC_AUTO_PLAY*/
 
 /**********************
  *   STATIC FUNCTIONS
