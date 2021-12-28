@@ -200,7 +200,7 @@ void lv_demo_widgets(void)
 
 }
 
-#if LV_DEMO_MUSIC_AUTO_PLAY
+#if LV_DEMO_WIDGETS_SLIDESHOW
 static void auto_step_cb(lv_timer_t *t)
 {
     LV_UNUSED(t);
@@ -248,7 +248,7 @@ static void auto_step_cb(lv_timer_t *t)
     state++;
 }
 
-#endif /*LV_DEMO_MUSIC_AUTO_PLAY*/
+#endif /*LV_DEMO_WIDGETS_SLIDESHOW*/
 
 /**********************
  *   STATIC FUNCTIONS
